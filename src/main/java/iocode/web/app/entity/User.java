@@ -1,6 +1,7 @@
 package iocode.web.app.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -38,6 +39,7 @@ public class User implements UserDetails {
     private Date dob;
     private long tel;
     private String tag;
+    @JsonIgnore
     private String password;
     private String gender;
 
@@ -50,12 +52,15 @@ public class User implements UserDetails {
     private List<String> roles;
 
     @OneToOne(mappedBy = "owner")
+    @JsonIgnore
     private Card card;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Transaction> transactions;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Account> accounts;
 
     @Override
