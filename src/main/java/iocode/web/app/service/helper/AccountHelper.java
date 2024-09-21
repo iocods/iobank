@@ -41,6 +41,7 @@ public class AccountHelper {
 
         var account = Account.builder()
             .accountNumber(accountNumber)
+            .accountName(user.getFirstname() + " " + user.getLastname())
             .balance(1000)
             .owner(user)
             .code(accountDto.getCode())
