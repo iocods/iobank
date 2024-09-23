@@ -1,5 +1,6 @@
 package iocode.web.app.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -28,18 +29,23 @@ public class Transaction {
     private LocalDateTime updatedAt;
     @CreationTimestamp
     private LocalDateTime createdAt;
+    @Enumerated(value = EnumType.STRING)
     private Status status;
+    @Enumerated(value = EnumType.STRING)
     private Type type;
 
     @ManyToOne
     @JoinColumn(name = "card_id")
+    @JsonIgnore
     private Card card;
 
     @ManyToOne
     @JoinColumn(name = "owner_id")
+    @JsonIgnore
     private User owner;
 
     @ManyToOne
     @JoinColumn(name = "account_id")
+    @JsonIgnore
     private Account account;
 }

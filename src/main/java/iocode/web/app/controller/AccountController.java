@@ -1,6 +1,7 @@
 package iocode.web.app.controller;
 
 import iocode.web.app.dto.AccountDto;
+import iocode.web.app.dto.ConvertDto;
 import iocode.web.app.dto.TransferDto;
 import iocode.web.app.entity.Account;
 import iocode.web.app.entity.Transaction;
@@ -42,5 +43,11 @@ public class AccountController {
     @GetMapping("/rates")
     public ResponseEntity<Map<String, Double>> getExchangeRate() {
         return ResponseEntity.ok(accountService.getExchangeRate());
+    }
+
+    @PostMapping("/convert")
+    public ResponseEntity<Transaction> convertCurrency(@RequestBody ConvertDto convertDto, Authentication authentication) throws Exception {
+        var user = (User) authentication.getPrincipal();
+        return ResponseEntity.ok(accountService.convertCurrency(convertDto, user));
     }
 }

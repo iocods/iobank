@@ -1,6 +1,7 @@
 package iocode.web.app.service;
 
 import iocode.web.app.dto.AccountDto;
+import iocode.web.app.dto.ConvertDto;
 import iocode.web.app.dto.TransferDto;
 import iocode.web.app.entity.Account;
 import iocode.web.app.entity.Transaction;
@@ -8,14 +9,15 @@ import iocode.web.app.entity.User;
 import iocode.web.app.repository.AccountRepository;
 import iocode.web.app.service.helper.AccountHelper;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.ObjectNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AccountService {
 
     private final AccountRepository accountRepository;
@@ -38,5 +40,9 @@ public class AccountService {
 
     public Map<String, Double> getExchangeRate() {
         return exchangeRateService.getRates();
+    }
+
+    public Transaction convertCurrency(ConvertDto convertDto, User user) throws Exception {
+        return accountHelper.convertCurrency(convertDto, user);
     }
 }
