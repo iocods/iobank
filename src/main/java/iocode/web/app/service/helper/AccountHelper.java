@@ -6,6 +6,7 @@ import iocode.web.app.entity.*;
 import iocode.web.app.repository.AccountRepository;
 import iocode.web.app.repository.TransactionRepository;
 import iocode.web.app.service.ExchangeRateService;
+import iocode.web.app.service.TransactionService;
 import iocode.web.app.util.RandomUtil;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.naming.OperationNotSupportedException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ import java.util.Map;
 public class AccountHelper {
 
     private final AccountRepository accountRepository;
-    private final TransactionRepository transactionRepository;
+    private final TransactionService transactionService;
     private final ExchangeRateService exchangeRateService;
 
 
@@ -60,8 +62,8 @@ public class AccountHelper {
         senderAccount.setBalance(senderAccount.getBalance() - amount * 1.01);
         receiverAccount.setBalance(receiverAccount.getBalance() + amount);
         accountRepository.saveAll(List.of(senderAccount, receiverAccount));
-        var senderTransaction = createAccountTransaction(amount, Type.WITHDRAW, amount * 0.01, user, senderAccount);
-        var receiverTransaction = createAccountTransaction(amount, Type.DEPOSIT, 0.00, receiverAccount.getOwner(), receiverAccount);
+        var senderTransaction = transactionService.createAccountTransaction(amount, Type.WITHDRAW, amount * 0.01, user, senderAccount);
+        var receiverTransaction = transactionService.createAccountTransaction(amount, Type.DEPOSIT, 0.00, receiverAccount.getOwner(), receiverAccount);
 
         return senderTransaction;
     }
@@ -123,20 +125,20 @@ public class AccountHelper {
         toAccount.setBalance(toAccount.getBalance() + computedAmount);
         accountRepository.saveAll(List.of(fromAccount, toAccount));
 
-        var fromAccountTransaction = createAccountTransaction(convertDto.getAmount(), Type.CONVERSION, convertDto.getAmount() * 0.01, user, fromAccount);
-        var toAccountTransaction = createAccountTransaction(computedAmount, Type.DEPOSIT, convertDto.getAmount() * 0.00, user, toAccount);
+        var fromAccountTransaction = transactionService.createAccountTransaction(convertDto.getAmount(), Type.CONVERSION, convertDto.getAmount() * 0.01, user, fromAccount);
+        var toAccountTransaction = transactionService.createAccountTransaction(computedAmount, Type.DEPOSIT, convertDto.getAmount() * 0.00, user, toAccount);
         return fromAccountTransaction;
     }
 
-    public Transaction createAccountTransaction(double amount, Type type, double txFee, User user, Account account) {
-        var tx = Transaction.builder()
-            .txFee(txFee)
-            .amount(amount)
-            .type(type)
-            .status(Status.COMPLETED)
-            .owner(user)
-            .account(account)
-            .build();
-        return transactionRepository.save(tx);
+    public boolean existsByCodeAndOwnerUid(String code, String uid) {
+        return accountRepository.existsByCodeAndOwnerUid(code, uid);
+    }
+
+    public Optional<Account> findByCodeAndOwnerUid(String code, String uid) {
+        return accountRepository.findByCodeAndOwnerUid(code, uid);
+    }
+
+    public Account save(Account usdAccount) {
+        return accountRepository.save(usdAccount);
     }
 }
