@@ -12,6 +12,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * This class is responsible for fetching and storing the latest exchange rates for a set of currencies.
+ * It uses the Currency API to retrieve the exchange rates.
+ */
 @Component
 @RequiredArgsConstructor
 @Getter
@@ -19,8 +23,14 @@ public class ExchangeRateService {
 
     private final RestTemplate restTemplate;
 
+    /**
+     * A map to store the exchange rates for each currency.
+     */
     private Map<String, Double> rates = new HashMap<>();
 
+    /**
+     * A set of currencies for which exchange rates are fetched.
+     */
     private final Set<String> CURRENCIES = Set.of(
         "USD",
         "EUR",
@@ -30,9 +40,15 @@ public class ExchangeRateService {
         "INR"
     );
 
+    /**
+     * The API key for accessing the Currency API.
+     */
     @Value("${currencyApiKey}")
     private String apiKey;
 
+    /**
+     * Fetches the latest exchange rates for the specified currencies from the Currency API and stores them in the rates map.
+     */
     public void getExchangeRate() {
         String CURRENCY_API = "https://api.currencyapi.com/v3/latest?apikey=";
         var response = restTemplate.getForEntity(CURRENCY_API + apiKey, JsonNode.class);

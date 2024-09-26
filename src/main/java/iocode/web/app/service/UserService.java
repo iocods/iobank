@@ -16,6 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class provides services related to user operations.
+ * It includes methods for user registration and authentication.
+ */
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -27,10 +31,24 @@ public class UserService {
     private final AuthenticationManager authenticationManager; // Inject AuthenticationManager
     private final JwtService jwtService; // Inject JwtService
 
+    /**
+     * Registers a new user.
+     *
+     * @param userDto The user data transfer object containing the user's details.
+     * @return The registered user.
+     */
     public User registerUser(UserDto userDto) {
         User user = mapToUser(userDto);
         return userRepository.save(user);
     }
+
+    /**
+     * Authenticates a user and generates a JWT token.
+     *
+     * @param userDto The user data transfer object containing the user's credentials.
+     * @return A map containing the JWT token and the authenticated user.
+     * @throws UsernameNotFoundException If the user is not found.
+     */
     public Map<String, Object> authenticateUser(UserDto userDto) {
         Map<String, Object> authObject = new HashMap<String, Object>();
         User user = (User) userDetailsService.loadUserByUsername(userDto.getUsername());
@@ -43,6 +61,13 @@ public class UserService {
         authObject.put("user", user);
         return authObject;
     }
+
+    /**
+     * Maps a UserDto to a User entity.
+     *
+     * @param dto The user data transfer object.
+     * @return The mapped User entity.
+     */
     private User mapToUser(UserDto dto){
         return User.builder()
                .lastname(dto.getLastname())
