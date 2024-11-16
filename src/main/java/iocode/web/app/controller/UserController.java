@@ -39,8 +39,11 @@ public class UserController {
     @PostMapping("/auth")
     public ResponseEntity<?> authenticateUser(@RequestBody UserDto userDto) {
         var authObject = userService.authenticateUser(userDto);
+        var token = (String) authObject.get("token");
+        System.out.println("Jwt token: " + token);
         return ResponseEntity.ok()
-            .header(HttpHeaders.AUTHORIZATION, (String) authObject.get("token"))
+            .header("Authorization", token)
+            .header(HttpHeaders.ACCESS_CONTROL_EXPOSE_HEADERS, "Authorization")
             .body(authObject.get("user"));
     }
 }

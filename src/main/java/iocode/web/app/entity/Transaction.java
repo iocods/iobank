@@ -50,6 +50,8 @@ public class Transaction {
      */
     private String receiver;
 
+    private String description;
+
     /**
      * The timestamp of the last update to the transaction.
      */
@@ -97,4 +99,5 @@ public class Transaction {
     @JoinColumn(name = "account_id")
     @JsonIgnore
     private Account account;
+
 }

@@ -59,7 +59,7 @@ public class CardService {
         } while (cardRepository.existsByCardNumber(cardNumber));
         Card card = Card.builder()
             .cardHolder(user.getFirstname() + " " + user.getLastname())
-//            .cardNumber(cardNumber)
+            .cardNumber(cardNumber)
             .exp(LocalDateTime.now().plusYears(3))
             .owner(user)
             .cvv(new RandomUtil().generateRandom(3).toString())
