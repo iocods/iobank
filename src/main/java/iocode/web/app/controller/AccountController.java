@@ -75,6 +75,11 @@ public class AccountController {
         return ResponseEntity.ok(accountService.getExchangeRate());
     }
 
+    @PostMapping("/find")
+    public ResponseEntity<Account> findAccount(@RequestBody TransferDto dto) {
+        return ResponseEntity.ok(accountService.findAccount(dto.getCode() ,dto.getRecipientAccountNumber()));
+    }
+
     /**
      * Converts a specified amount of currency from one account to another for the authenticated user.
      *

@@ -56,4 +56,6 @@ public interface AccountRepository extends JpaRepository<Account, String> {
      * or an empty {@link Optional} if no such account exists
      */
     Optional<Account> findByAccountNumber(long recipientAccountNumber);
+
+    Optional<Account> findByCodeAndAccountNumber(String code, long recipientAccountNumber);
 }

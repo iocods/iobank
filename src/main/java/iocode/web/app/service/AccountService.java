@@ -59,6 +59,7 @@ public class AccountService {
      * @throws Exception If any error occurs during the transfer.
      */
     public Transaction transferFunds(TransferDto transferDto, User user) throws Exception {
+        System.out.println("Currency Code: " + transferDto.getCode());
         var senderAccount = accountRepository.findByCodeAndOwnerUid(transferDto.getCode(), user.getUid())
             .orElseThrow(() -> new UnsupportedOperationException("Account of type currency do not exists for user"));
         var receiverAccount = accountRepository.findByAccountNumber(transferDto.getRecipientAccountNumber()).orElseThrow();
@@ -84,5 +85,11 @@ public class AccountService {
      */
     public Transaction convertCurrency(ConvertDto convertDto, User user) throws Exception {
         return accountHelper.convertCurrency(convertDto, user);
+    }
+
+    public Account findAccount(String code, long recipientAccountNumber) {
+        System.out.println("Account Number : " + recipientAccountNumber);
+        System.out.println("Code: " + code);
+        return accountRepository.findByCodeAndAccountNumber(code, recipientAccountNumber).orElseThrow();
     }
 }
